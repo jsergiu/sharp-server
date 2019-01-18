@@ -1,13 +1,13 @@
 const express = require('express')
 const fs = require('fs')
-const path = require('path')
-const sharp = require('sharp')
+const path = require('path') 
 const axios = require('axios')
 const bcrypt = require('bcrypt-nodejs')
 
 // Utils
 const getClientInfo = require('./utils/getClientInfo')
 const getSharpParams = require('./utils/getSharpParams')
+const saveImageAsync = require('./utils/saveImageAsync')
 const resizeImage = require('./utils/resizeImage')
  
 const app = express()
@@ -28,26 +28,8 @@ console.log(`Express started on port ${PORT}`);
 
 
 app.get('/', function (req, res) {
-    res.send('hello world')
+    res.send('Use /api/image?url=...&width=...')
 })
-
-async function downloadImage (url) {
-    const imagePath = path.resolve(__dirname, 'images', 'code.jpg')
-    const writer = fs.createWriteStream(imagePath)
-  
-    const response = await axios({
-      url,
-      method: 'GET',
-      responseType: 'stream'
-    })
-  
-    response.data.pipe(writer)
-  
-    return new Promise((resolve, reject) => {
-        writer.on('finish', resolve)
-        writer.on('error', reject)
-    })
-}
 
 app.get('/api/image', async function (req, res) {
 
@@ -56,22 +38,14 @@ app.get('/api/image', async function (req, res) {
     const clientInfo = getClientInfo(req.headers)
     const sharpParams = getSharpParams(req.query)
     
-    console.log(clientInfo)
-    console.log(sharpParams)
+    console.log("\nClient info: \n", clientInfo, '\n')
+    console.log("\nParams info: \n", sharpParams, '\n')
     
-    downloadImage(imageUrl)
-        .then(response => {
-            // Set the content-type of the response
-            res.type(sharpParams.mimeType);
-        
-            // Get the resized image
-            resizeImage(image, sharpParams).pipe(res);
-            
-        })
-        .catch(error => {
-            console.log('error')
-            console.log(error)
-        })
+    const imagePath = path.resolve(__dirname, 'originals', 'img.jpg')
+    await saveImageAsync(imageUrl, imagePath)
 
-   
+    res.type(sharpParams.mimeType);
+    resizeImage(imagePath, sharpParams).pipe(res);
+
+    
 })

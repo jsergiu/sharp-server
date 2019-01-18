@@ -3,17 +3,17 @@ const sharp = require('sharp')
 
 const resizeImage = (localPath, params) => {
     const readStream = fs.createReadStream(localPath);
-    const transform = sharp();
+    let transformer = sharp();
 
     if (params.format) {
-        transform = transform.toFormat(format);
+        transformer = transformer.toFormat(params.format);
     }
 
    if (params.width || params.height) {
-       transform = transform.resize(params.width, params.height);
+       transformer = transformer.resize(params.width, params.height);
    }
 
-    return readStream.pipe(transform).pipe(localPath);
+    return readStream.pipe(transformer);
 }
 
 module.exports = resizeImage

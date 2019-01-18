@@ -8,7 +8,7 @@ const getSharpParams = (requestQuery) => {
     }
 
     if (requestQuery.width) {
-        params.width = parseInt(widthString);
+        params.width = parseInt(requestQuery.width);
     }
 
     if (requestQuery.height) {
