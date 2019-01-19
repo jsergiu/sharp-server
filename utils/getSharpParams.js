@@ -1,8 +1,10 @@
+const imageFormats = require('../constants/imageFormats')
+
 const getSharpParams = (requestQuery) => {
 
     let params = {
         format: 'png',
-        mimeType: 'image/png',
+        mimeType: imageFormats.imageByMimeTypesByExtension['png'],
         width: null,
         height: null,
     }
@@ -12,7 +14,7 @@ const getSharpParams = (requestQuery) => {
     }
 
     if (requestQuery.height) {
-        height = parseInt(requestQuery.height);
+        params.height = parseInt(requestQuery.height);
     }
 
     return params

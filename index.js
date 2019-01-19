@@ -1,27 +1,17 @@
 const express = require('express')
-const path = require('path') 
+const path = require('path')
 
 // Utils
 const getClientInfo = require('./utils/getClientInfo')
 const getSharpParams = require('./utils/getSharpParams')
-const saveImageAsync = require('./utils/saveImageAsync')
+const ImageDownloader = require('./utils/ImageDownloader')
 const resizeImage = require('./utils/resizeImage')
- 
+
 const app = express()
 var PORT = 8000;
 
-
-/**
- * [X] Get client data
- * [X] Get params
- * Try to find the original in cache
- * If not found, fetch the original from the url
- * Store the original to /originals/domain.com
- * Resize and return the resized image
- */
-
 app.listen(PORT);
-console.log(`Express started on port ${PORT}`);
+console.log(`Sharp-Server started on port ${PORT}`);
 
 
 app.get('/', function (req, res) {
@@ -30,19 +20,17 @@ app.get('/', function (req, res) {
 
 app.get('/api/image', async function (req, res) {
 
-    const imageUrl = req.query.url
+    const imageSourceUrl = req.query.url
 
-    const clientInfo = getClientInfo(req.headers)
+    //const clientInfo = getClientInfo(req.headers)
     const sharpParams = getSharpParams(req.query)
-    
-    console.log("\nClient info: \n", clientInfo, '\n')
-    console.log("\nParams info: \n", sharpParams, '\n')
-    
-    const imagePath = path.resolve(__dirname, 'originals', 'img.jpg')
-    await saveImageAsync(imageUrl, imagePath)
 
-    res.type(sharpParams.mimeType);
-    resizeImage(imagePath, sharpParams).pipe(res);
+    // Download image to originals folder
+    const imageDownloader = new ImageDownloader(imageSourceUrl)
+    await imageDownloader.downloadImageAsync()
+    const downloadPath = path.resolve(__dirname, 'originals', imageDownloader.fileName)
 
-    
+    // Resize and return
+    res.type(imageDownloader.mimeType);
+    resizeImage(downloadPath, sharpParams).pipe(res);
 })

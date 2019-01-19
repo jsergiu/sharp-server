@@ -10,6 +10,7 @@
   "license": "ISC",
   "dependencies": {
     "axios": "^0.18.0",
+    "bcryptjs": "^2.4.3",
     "express": "^4.16.4",
     "sharp": "^0.21.2",
     "ua-spy": "^1.0.0"

@@ -11,7 +11,7 @@ node
 ## How to run it
 ```sh
 git clone https://github.com/jsergiu/sharp-server.git sharp-server
-cd shape-server
+cd sharp-server
 yarn
 node index.js
 ```
