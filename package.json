@@ -1,18 +1,43 @@
 {
-  "name": "my-image-server",
-  "version": "1.0.0",
-  "description": "",
+  "name": "sharp-server",
+  "description": "A node server that resizes images using sharp library",
+  "author": "Sergiu Munteanu",
+  "homepage": "https://github.com/jsergiu/sharp-server/",
+  "version": "0.1.0",
   "main": "index.js",
   "scripts": {
+    "start": "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
-  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/lovell/sharp"
+  },
+  "keywords": [
+    "jpeg",
+    "png",
+    "webp",
+    "tiff",
+    "gif",
+    "svg",
+    "dzi",
+    "image",
+    "resize",
+    "thumbnail",
+    "crop",
+    "embed",
+    "libvips",
+    "vips"
+  ],
+  "license": "Apache-2.0",
   "dependencies": {
     "axios": "^0.18.0",
     "bcryptjs": "^2.4.3",
     "express": "^4.16.4",
     "sharp": "^0.21.2",
     "ua-spy": "^1.0.0"
+  },
+  "engines": {
+    "node": ">=6"
   }
 }
