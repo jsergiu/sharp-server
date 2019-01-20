@@ -1,10 +1,12 @@
+const config = require('../config')
 const imageFormats = require('../constants/imageFormats')
+
 
 const getSharpParams = (requestQuery) => {
 
     let params = {
-        format: 'png',
-        mimeType: imageFormats.imageByMimeTypesByExtension['png'],
+        format: config.defaultOutputExtension,
+        mimeType: imageFormats.mimeTypesByExtension[config.defaultOutputExtension],
         width: null,
         height: null,
     }

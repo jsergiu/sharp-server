@@ -27,8 +27,17 @@ app.get('/api/image', async function (req, res) {
 
     // Download image to originals folder
     const imageDownloader = new ImageDownloader(imageSourceUrl)
-    await imageDownloader.downloadImageAsync()
-    const downloadPath = path.resolve(__dirname, 'originals', imageDownloader.fileName)
+
+    // Check if image is cached in originals folder. Download it otherwise
+    let downloadPath = imageDownloader.getCachedImagePath()
+    console.log(downloadPath)
+
+    if (!downloadPath) {
+        await imageDownloader.downloadImageAsync()
+        downloadPath = path.resolve(__dirname, 'originals', imageDownloader.fileName)
+    } else {
+        console.log('Image found in cache')
+    }
 
     // Resize and return
     res.type(imageDownloader.mimeType);

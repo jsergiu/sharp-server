@@ -1,4 +1,6 @@
-const imageExtensions = {
+const extensionsArray = ['bmp', 'gif', 'jpg', 'png', 'svg', 'tiff', 'webp']
+
+const extensionsObject = {
     'bmp': 'bmp',
     'gif': 'gif',
     'jpg': 'jpg',
@@ -9,7 +11,7 @@ const imageExtensions = {
     'webp': 'webp',
 }
 
-const imageExtensionsByMimeType = {
+const extensionsByMimeType = {
     'image/bmp': 'bmp',
     'image/gif': 'gif',
     'image/jpeg': 'jpg',
@@ -20,7 +22,7 @@ const imageExtensionsByMimeType = {
     'image/webp': 'webp',
 }
 
-const imageByMimeTypesByExtension = {
+const mimeTypesByExtension = {
     'bmp': 'image/bmp',
     'gif': 'image/gif',
     'jpg': 'image/jpeg',
@@ -33,7 +35,8 @@ const imageByMimeTypesByExtension = {
 
 
 module.exports = {
-    imageExtensions,
-    imageExtensionsByMimeType,
-    imageByMimeTypesByExtension
+    extensionsArray,
+    extensionsObject,
+    extensionsByMimeType,
+    mimeTypesByExtension
 }

@@ -1,7 +1,7 @@
 const fs = require('fs') 
 const axios = require('axios')
 const path = require('path')
-const bcrypt = require('bcryptjs')
+var md5 = require('blueimp-md5')
 
 const imageFormats = require('../constants/imageFormats')
 
@@ -12,10 +12,10 @@ class ImageDownloader {
         this.imageSourceUrl = imageSourceUrl
 
         // File extension of the downloaded image
-        this.extension = imageFormats.imageExtensions.png
+        this.extension = imageFormats.extensionsObject.png
 
         // Mime type coresponsing the file extension
-        this.mimeType = imageFormats.imageByMimeTypesByExtension[this.extension]
+        this.mimeType = imageFormats.mimeTypesByExtension[this.extension]
 
         // Image filename as is stored in the originals folder
         this.fileName = null
@@ -23,10 +23,7 @@ class ImageDownloader {
 
     // Generate download path by using a hash
     getDownloadPath() {
-        var hash = bcrypt.hashSync(this.imageSourceUrl)
-            .replace(/[\\]/g, '')
-            .replace(/[\/]/g, '')
-            .replace(/\./g, '')
+        var hash = md5(this.imageSourceUrl)
         this.fileName = hash + '.' + this.extension
         const downloadPath = path.resolve(__dirname, '../originals', this.fileName)
 
@@ -41,7 +38,7 @@ class ImageDownloader {
         })
 
         this.mimeType = response.headers['content-type'] || this.mimeType
-        this.extension = imageFormats.imageExtensionsByMimeType[this.mimeType]
+        this.extension = imageFormats.extensionsByMimeType[this.mimeType]
 
         
         if (!this.extension) {
@@ -58,8 +55,27 @@ class ImageDownloader {
             writer.on('finish', resolve)
             writer.on('error', reject)
         })
-
     }
+
+    /**
+     * Check if image already exists in the originals folder
+     * @returns {String} or false
+     */
+    getCachedImagePath() {
+        const hash = md5(this.imageSourceUrl)
+        let result = false
+
+        imageFormats.extensionsArray.forEach(extension => {
+            let filePath = path.resolve(__dirname, '../originals', hash + '.' + extension)
+
+            if (fs.existsSync(filePath)) {
+                result = filePath
+            }
+        });
+
+        return result
+    }
+
 }
 
 
